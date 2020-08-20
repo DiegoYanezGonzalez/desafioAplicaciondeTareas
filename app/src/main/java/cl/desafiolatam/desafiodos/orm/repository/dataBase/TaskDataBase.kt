@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import cl.desafiolatam.desafiodos.orm.repository.ITaskDao
 
 
-
+//Service Base de datos
 @Database(entities=arrayOf(Task::class)
 ,version=0,
 exportSchema=false)

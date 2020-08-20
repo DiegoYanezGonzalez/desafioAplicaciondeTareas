@@ -8,34 +8,26 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cl.desafiolatam.desafiodos.task.OnItemClickListener
 import cl.desafiolatam.desafiodos.task.TaskListAdapter
 import cl.desafiolatam.desafiodos.task.TaskUIDataHolder
+import cl.desafiolatam.desafiodos.viewModel.TaskViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_task.view.*
 
+
+//tienen implementado un onitemclick
 class MainActivity : AppCompatActivity(), OnItemClickListener {
-    override fun onItemClick(taskItem: TaskUIDataHolder) {
-        val dialogView = layoutInflater.inflate(R.layout.add_task, null)
-        val taskText = dialogView.task_input
-        taskText.setText(taskItem.text)
-        val dialogBuilder = AlertDialog
-            .Builder(this)
-            .setTitle("Editar una Tarea")
-            .setView(dialogView)
-            .setNegativeButton("Cerrar") {
-                    dialog: DialogInterface, _: Int -> dialog.dismiss()}
-            .setPositiveButton("Editar") {
-                    _: DialogInterface, _: Int ->
-                //generar código para editar/actualizar la tarea
-            }
-        dialogBuilder.create().show()
-    }
+
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: TaskListAdapter
+    //Referencia del viewmodel para indicarle a la vista
+    private lateinit var taskViewModel:TaskViewModel
+
     // crear las variables para utilizar la base de datos
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +36,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         setUpViews()
+        //Instancias el viewmodel, pasarle el contexto
+        taskViewModel=ViewModelProvider(this).get(TaskViewModel::class.java)
+
+
         //inicializar lo necesario para usar la base de datos
     }
 
@@ -81,6 +77,24 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun updateEntity(taskItem: TaskUIDataHolder, newText: String) {
         //completar método para actualizar una tarea en la base de datos
+    }
+
+
+    override fun onItemClick(taskItem: TaskUIDataHolder) {
+        val dialogView = layoutInflater.inflate(R.layout.add_task, null)
+        val taskText = dialogView.task_input
+        taskText.setText(taskItem.text)
+        val dialogBuilder = AlertDialog
+            .Builder(this)
+            .setTitle("Editar una Tarea")
+            .setView(dialogView)
+            .setNegativeButton("Cerrar") {
+                    dialog: DialogInterface, _: Int -> dialog.dismiss()}
+            .setPositiveButton("Editar") {
+                    _: DialogInterface, _: Int ->
+                //generar código para editar/actualizar la tarea
+            }
+        dialogBuilder.create().show()
     }
 
     private fun addTask() {
